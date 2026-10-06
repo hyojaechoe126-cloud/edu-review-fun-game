@@ -168,13 +168,32 @@ function generateLocalScienceKnowledge(query: string, grade: string): string {
 더 깊이 알고 싶은 세부 개념이나 궁금한 과학 단원을 채팅창에 적어주시면, AI 튜터가 맞춤형 실험 비유와 퀴즈로 바로 알려드릴게요!`;
 }
 
+import { generateScienceImage } from '@/lib/science-visuals';
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { messages = [], gradeCategory = 'all' } = body;
+    const { messages = [], gradeCategory = 'all', includeVisual = false } = body;
 
     const apiKey = (process.env.CHATGPT_APIKEY || process.env.OPENAI_API_KEY || '').trim();
     const lastUserMsg = messages[messages.length - 1]?.content || '';
+
+    // Check if user is asking for image / illustration / diagram
+    const isVisualRequest = includeVisual || /(그림|사진|도해|이미지|모형|다이어그램|시각화|그려줘|보여줘)/.test(lastUserMsg);
+
+    let visualData: { imageUrl?: string; imageCaption?: string; imageSource?: string } = {};
+    if (isVisualRequest) {
+      try {
+        const visual = await generateScienceImage(lastUserMsg, apiKey);
+        visualData = {
+          imageUrl: visual.imageUrl,
+          imageCaption: visual.caption,
+          imageSource: visual.source,
+        };
+      } catch (vErr) {
+        console.warn('Visual generation error:', vErr);
+      }
+    }
 
     // If API key is not present (e.g. running locally prior to Vercel production sync)
     if (!apiKey) {
@@ -182,7 +201,8 @@ export async function POST(req: Request) {
       return NextResponse.json({
         reply: fallbackText,
         source: 'local-science-engine',
-        note: '💡 Vercel 환경변수 CHATGPT_APIKEY가 연동되어 있습니다. 로컬 환경에서는 지능형 과학 지식 엔진이 활성화되며 Vercel 배포 시 OpenAI GPT-4o-mini가 실시간 추론합니다.'
+        note: '💡 Vercel 환경변수 CHATGPT_APIKEY가 연동되어 있습니다. 로컬 환경에서는 지능형 과학 지식 엔진이 활성화되며 Vercel 배포 시 OpenAI GPT-4o-mini가 실시간 추론합니다.',
+        ...visualData,
       });
     }
 
@@ -217,7 +237,8 @@ export async function POST(req: Request) {
       return NextResponse.json({
         reply: fallbackText,
         source: 'smart-fallback',
-        warning: `OpenAI 연동 응답 지연(코드: ${openaiRes.status})으로 과학 내장 튜터가 즉시 응답했습니다.`
+        warning: `OpenAI 연동 응답 지연(코드: ${openaiRes.status})으로 과학 내장 튜터가 즉시 응답했습니다.`,
+        ...visualData,
       });
     }
 
@@ -227,7 +248,8 @@ export async function POST(req: Request) {
     return NextResponse.json({
       reply,
       source: 'openai-gpt-4o-mini',
-      model: 'gpt-4o-mini'
+      model: 'gpt-4o-mini',
+      ...visualData,
     });
 
   } catch (err: any) {
