@@ -45,7 +45,7 @@ export default function Navbar({ theme, setTheme, activeTab, setActiveTab }: Nav
           <div className="flex flex-col justify-center">
             <div className="flex items-center gap-1.5 whitespace-nowrap">
               <span className="text-lg sm:text-xl font-black tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-pink-400 to-yellow-300">
-                중등 과학 아레나
+                ScienceEDU_with 효재T
               </span>
               <span className="px-1.5 py-0.5 text-[10px] font-mono font-bold tracking-wider rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
                 과학 1·2·3

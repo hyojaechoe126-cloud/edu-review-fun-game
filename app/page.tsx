@@ -53,16 +53,11 @@ export default function Home() {
           <div className="relative z-10 max-w-2xl space-y-4">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-cyan-400 font-mono text-xs whitespace-nowrap">
               <Atom className="w-3.5 h-3.5 animate-spin" style={{ animationDuration: '8s' }} />
-              <span>중학교 과학(과학1 · 과학2 · 과학3) 인터랙티브 배틀</span>
+              <span>중학교 과학(과학1 · 과학2 · 과학3) 인터랙티브 배틀 &amp; AI 탐구 랩</span>
             </div>
             
-            <h1 className="text-2xl sm:text-4xl font-black tracking-tight leading-tight bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-fuchsia-400 to-amber-300">
-              중등 과학 퀴즈 배틀 & 미니게임
-            </h1>
-            
             <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-sans light:text-slate-600">
-              중학교 과학 1학년, 2학년, 3학년 핵심 개념 퀴즈 배틀과 스피드 미니게임을 즐겨보세요.
-              실시간 명예의 전당과 탐구 질문 피드가 함께 제공됩니다.
+              중학교 과학 1학년, 2학년, 3학년 핵심 개념 퀴즈 배틀, 스피드 미니게임, 실시간 명예의 전당과 AI 과학 탐구를 즐겨보세요.
             </p>
 
             {/* Quick Action Single-Line Row Buttons */}
@@ -167,7 +162,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2 whitespace-nowrap">
             <Terminal className="w-4 h-4 text-cyan-400" />
-            <span>중등 과학 아레나 (과학1·2·3) · Powered by Next.js & Supabase</span>
+            <span>ScienceEDU_with 효재T (과학1·2·3) · Powered by Next.js & Supabase</span>
           </div>
           <div className="whitespace-nowrap">
             <span>Region: Seoul (icn1 / ap-northeast-2)</span>

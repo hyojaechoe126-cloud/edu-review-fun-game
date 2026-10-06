@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'SCIENCE ARENA | 사이버 과학 퀴즈 배틀 & 사이언스 랩',
-  description: '중고등학생을 위한 인터랙티브 과학 퀴즈 배틀, 원소기호 스피드 랩, 명예의 전당 & 과학 탐구 커뮤니티 (Seoul icn1 Region Optimized)',
+  title: 'ScienceEDU_with 효재T | 중등 과학 퀴즈 & AI 사이언스 랩',
+  description: '효재T와 함께하는 인터랙티브 중등 과학(과학1·2·3) 퀴즈 배틀, 미니게임 & AI 탐구',
 };
 
 export default function RootLayout({
