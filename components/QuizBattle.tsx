@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
-import { Flame, Clock, Award, CheckCircle2, XCircle, ArrowRight, RotateCcw, Send, Sparkles } from 'lucide-react';
+import { Flame, Clock, Award, CheckCircle2, XCircle, ArrowRight, RotateCcw, Send, Sparkles, Atom, FlaskConical, Dna, Globe2, Lightbulb } from 'lucide-react';
 
 interface Question {
   question: string;
@@ -12,113 +12,161 @@ interface Question {
   category: string;
 }
 
-const QUIZ_DATA: Record<string, Question[]> = {
-  '수학': [
+const SCIENCE_QUIZ_DATA: Record<string, Question[]> = {
+  '물리': [
     {
-      category: '수학',
-      question: '이차방정식 x² - 5x + 6 = 0 의 두 근의 합은 무엇일까요?',
-      options: ['5', '-5', '6', '1'],
+      category: '물리',
+      question: '진공 상태에서 질량이 다른 쇠구슬과 깃털을 동시에 떨어뜨리면 어떻게 될까요?',
+      options: [
+        '동시에 바닥에 떨어진다',
+        '쇠구슬이 먼저 떨어진다',
+        '깃털이 먼저 떨어진다',
+        '질량 차이에 비례하여 시간 차이가 난다',
+      ],
       answer: 0,
-      explanation: '근과 계수의 관계에 의해 두 근의 합은 -(-5)/1 = 5 입니다.',
+      explanation: '진공에서는 공기 저항이 없으므로 중력 가속도(g ≈ 9.8m/s²)가 질량과 무관하게 동일하게 작용하여 동시에 떨어집니다 (갈릴레이의 낙하 법칙).',
     },
     {
-      category: '수학',
-      question: '피타고라스 정리를 만족하는 세 자연수의 비로 올바른 것은?',
-      options: ['3 : 4 : 5', '2 : 3 : 4', '4 : 5 : 6', '5 : 11 : 13'],
+      category: '물리',
+      question: '뉴턴의 운동 제3법칙인 \'작용·반작용의 법칙\'의 올바른 예시는?',
+      options: [
+        '로켓이 가스를 분사하며 앞으로 나아간다',
+        '차가 급정거할 때 몸이 앞으로 쏠린다',
+        '힘을 세게 줄수록 가속도가 커진다',
+        '높은 곳에서 떨어진 공이 속도가 점점 빨라진다',
+      ],
       answer: 0,
-      explanation: '3² + 4² = 9 + 16 = 25 = 5² 로 피타고라스 정리를 성립합니다.',
+      explanation: '로켓이 가스를 뒤로 밀어내는 힘(작용)에 의해, 가스가 로켓을 앞으로 밀어내는 힘(반작용)을 받아 전진합니다. 급정거 시 쏠림은 관성의 법칙(제1법칙)입니다.',
     },
     {
-      category: '수학',
-      question: '미분 공식: 함수 f(x) = 3x² + 4x + 1 의 도함수 f\'(x)는?',
-      options: ['6x + 4', '3x + 4', '6x² + 4', '6x + 1'],
+      category: '물리',
+      question: '빛의 성질 중 물속에 든 젓가락이 꺾여 보이는 현상의 원인은?',
+      options: ['빛의 굴절', '빛의 반사', '빛의 회절', '빛의 간섭'],
       answer: 0,
-      explanation: 'f\'(x) = 3*(2x) + 4*(1) + 0 = 6x + 4 입니다.',
+      explanation: '빛이 공기에서 물로 진행할 때 두 매질의 밀도 차이로 인해 진행 속도가 달라지면서 경로가 꺾이는 굴절(Refraction) 현상 때문입니다.',
     },
     {
-      category: '수학',
-      question: '서로 다른 4개 중 2개를 순서 없이 고르는 조합의 수 ₄C₂는?',
-      options: ['6', '12', '8', '24'],
+      category: '물리',
+      question: '아인슈타인의 특수 상대성 이론을 나타내는 유명한 질량-에너지 등가 공식은?',
+      options: ['E = mc²', 'F = ma', 'P = IV', 'v = fλ'],
       answer: 0,
-      explanation: '₄C₂ = (4 × 3) / (2 × 1) = 6 입니다.',
-    },
-  ],
-  '과학': [
-    {
-      category: '과학',
-      question: '주기율표에서 원자번호 1번인 원소의 기호는 무엇일까요?',
-      options: ['H (수소)', 'He (헬륨)', 'O (산소)', 'C (탄소)'],
-      answer: 0,
-      explanation: '원자번호 1번은 가장 가벼운 원소인 수소(H)입니다.',
-    },
-    {
-      category: '과학',
-      question: '뉴턴의 운동 제2법칙을 나타내는 공식은?',
-      options: ['F = ma', 'E = mc²', 'v = s/t', 'P = VI'],
-      answer: 0,
-      explanation: '힘(F)은 질량(m)과 가속도(a)의 곱과 같습니다 (F = ma).',
-    },
-    {
-      category: '과학',
-      question: '빛의 삼원색(RGB)에 해당하지 않는 색은?',
-      options: ['노랑 (Yellow)', '빨강 (Red)', '초록 (Green)', '파랑 (Blue)'],
-      answer: 0,
-      explanation: '빛의 3원색은 빨강(R), 초록(G), 파랑(B)이며, 세 색을 모두 합치면 흰색이 됩니다.',
-    },
-    {
-      category: '과학',
-      question: '광합성에 필요한 필수 요소가 아닌 것은?',
-      options: ['산소 (O₂)', '이산화탄소 (CO₂)', '물 (H₂O)', '빛 에너지'],
-      answer: 0,
-      explanation: '광합성은 물과 이산화탄소를 이용해 포도당과 산소를 생성하므로 산소는 생성물입니다.',
+      explanation: 'E = mc²은 질량(m)이 에너지(E)로 변환될 수 있음을 증명한 공식으로, 원자력 발전과 태양 핵융합 에너지의 기본 원리입니다.',
     },
   ],
-  '코딩': [
+  '화학': [
     {
-      category: '코딩',
-      question: '파이썬(Python)에서 리스트의 마지막 요소를 제거하고 반환하는 메서드는?',
-      options: ['pop()', 'remove()', 'delete()', 'shift()'],
+      category: '화학',
+      question: '주기율표에서 원자번호 1번과 원자번호 8번에 해당하는 원소 기호는?',
+      options: ['H, O', 'He, N', 'H, C', 'Li, F'],
       answer: 0,
-      explanation: 'pop() 메서드는 리스트의 마지막 인덱스 요소를 꺼내어 반환합니다.',
+      explanation: '원자번호 1번은 수소(H, Hydrogen)이고, 8번은 산소(O, Oxygen)입니다. 둘이 결합하면 물(H₂O)이 됩니다.',
     },
     {
-      category: '코딩',
-      question: '시간 복잡도 O(log N)을 가지는 대표적인 탐색 알고리즘은?',
-      options: ['이진 탐색 (Binary Search)', '선형 탐색 (Linear Search)', '버블 정렬 (Bubble Sort)', 'DFS'],
+      category: '화학',
+      question: '순수한 물(25℃ 기준)의 pH 값과 액성으로 올바른 것은?',
+      options: ['pH 7, 중성', 'pH 1, 강산성', 'pH 14, 강염기성', 'pH 4, 약산성'],
       answer: 0,
-      explanation: '정렬된 배열에서 중간값을 기준으로 탐색 범위를 반으로 줄여가는 이진 탐색은 O(log N)입니다.',
+      explanation: '순수한 물은 수소 이온 농도와 수산화 이온 농도가 같아 pH 7인 중성을 띱니다.',
     },
     {
-      category: '코딩',
-      question: '웹 브라우저에서 HTML 문서를 조작하기 위한 인터페이스 규격은?',
-      options: ['DOM (Document Object Model)', 'REST API', 'JSON', 'CSSOM'],
+      category: '화학',
+      question: '원자들이 옥텟 규칙(가장 바깥 전자 8개)을 만족하기 위해 전자를 서로 공유하는 화학 결합은?',
+      options: ['공유 결합', '이온 결합', '금속 결합', '수소 결합'],
       answer: 0,
-      explanation: 'DOM은 HTML 문서를 트리 구조 객체로 표현하여 자바스크립트로 제어할 수 있게 합니다.',
+      explanation: '비금속 원소들이 전자를 서로 주고받지 않고 쌍을 이루어 공유함으로써 안정해지는 결합을 공유 결합(Covalent bond)이라고 합니다.',
     },
     {
-      category: '코딩',
-      question: 'Git에서 원격 저장소의 최신 커밋을 내려받아 현재 브랜치와 병합하는 명령어는?',
-      options: ['git pull', 'git push', 'git commit', 'git status'],
+      category: '화학',
+      question: '다음 중 기체가 액체로 상태가 변할 때를 가리키는 용어는?',
+      options: ['액화 (Liquefaction)', '기화 (Vaporization)', '응고 (Solidification)', '승화 (Sublimation)'],
       answer: 0,
-      explanation: 'git pull 은 git fetch 와 git merge를 결합하여 원격 브랜치 내용을 로컬에 반영합니다.',
-    },
-  ],
-  '한국사': [
-    {
-      category: '한국사',
-      question: '훈민정음을 창제하여 백성들이 쉽게 글을 익히도록 한 조선의 왕은?',
-      options: ['세종대왕', '정조', '태종', '영조'],
-      answer: 0,
-      explanation: '세종대왕은 집현전 학사들과 함께 1443년 훈민정음을 창제하고 1446년 반포하였습니다.',
-    },
-    {
-      category: '한국사',
-      question: '조선 정조 때 축조된 과학적 계획도시이자 유네스코 세계문화유산은?',
-      options: ['수원 화성', '남한산성', '북한산성', '해미읍성'],
-      answer: 0,
-      explanation: '정조의 효심과 개혁정치 의지가 담긴 수원 화성은 정약용의 거중기를 활용해 축조되었습니다.',
+      explanation: '기체가 액체로 변하는 현상은 액화(예: 새벽에 맺히는 이슬)이며, 열에너지를 방출합니다.',
     },
   ],
+  '생명과학': [
+    {
+      category: '생명과학',
+      question: '식물 세포에는 존재하지만 동물 세포에는 존재하지 않는 세포 소기관은?',
+      options: ['엽록체와 세포벽', '미토콘드리아와 핵', '리보솜과 골지체', '세포막과 세포질'],
+      answer: 0,
+      explanation: '광합성을 담당하는 엽록체와 형태를 유지해 주는 세포벽은 식물 세포에만 있는 대표적 구조입니다.',
+    },
+    {
+      category: '생명과학',
+      question: '생명체의 유전 정보를 저장하는 이중 나선 구조의 핵산 분자는?',
+      options: ['DNA (디옥시리보핵산)', 'RNA (리보핵산)', 'ATP (아데노신삼인산)', '헤모글로빈'],
+      answer: 0,
+      explanation: 'DNA는 왓슨과 크릭이 밝혀낸 이중 나선 구조를 이루며, 부모로부터 자손에게 전달되는 유전 암호를 저장합니다.',
+    },
+    {
+      category: '생명과학',
+      question: '인간의 혈액 순환에서 온몸으로 산소가 풍부한 동맥혈을 뿜어내는 심장 부위는?',
+      options: ['좌심실', '우심실', '좌심방', '우심방'],
+      answer: 0,
+      explanation: '좌심실은 가장 두꺼운 근육벽을 가지고 대동맥을 통해 온몸으로 혈액을 강력하게 뿜어냅니다.',
+    },
+    {
+      category: '생명과학',
+      question: '생태계에서 유기물을 무기물로 분해하여 물질 순환을 돕는 생물군은?',
+      options: ['분해자 (세균, 곰팡이)', '생산자 (녹색식물)', '1차 소비자 (초식동물)', '최종 포식자'],
+      answer: 0,
+      explanation: '세균과 버섯, 곰팡이 등 분해자는 생물의 사체와 배설물을 분해하여 자연계의 물질 순환을 완성합니다.',
+    },
+  ],
+  '지구과학': [
+    {
+      category: '지구과학',
+      question: '태양계 행성 중 태양에서 가장 가까운 행성과 가장 큰 행성의 짝은?',
+      options: ['수성 - 목성', '금성 - 토성', '지구 - 목성', '수성 - 해왕성'],
+      answer: 0,
+      explanation: '태양에서 가장 가까운 행성은 수성(Mercury)이고, 태양계에서 가장 부피와 질량이 큰 행성은 목성(Jupiter)입니다.',
+    },
+    {
+      category: '지구과학',
+      question: '지구 대기권 중 오존층이 위치하여 자외선을 흡수해 온도가 상승하는 층은?',
+      options: ['성층권', '대류권', '중간권', '열권'],
+      answer: 0,
+      explanation: '성층권(약 10~50km)에는 오존층이 존재하여 해로운 태양 자외선을 흡수하며, 위로 올라갈수록 온도가 높아져 대류가 일어나지 않고 안정합니다.',
+    },
+    {
+      category: '지구과학',
+      question: '달이 태양과 지구 사이에 일직선으로 놓여 태양을 완전히 또는 일부 가리는 현상은?',
+      options: ['일식 (Solar Eclipse)', '월식 (Lunar Eclipse)', '조석 현상', '밀물과 썰물'],
+      answer: 0,
+      explanation: '태양 - 달 - 지구 순서로 위치할 때 달의 그림자가 지구에 드리워져 태양이 가려지는 현상이 일식입니다.',
+    },
+    {
+      category: '지구과학',
+      question: '암석이 높은 열과 압력을 받아 원래의 성질과 조직이 변화하여 생성된 암석은?',
+      options: ['변성암 (편마암 등)', '화성암 (화강암 등)', '퇴적암 (사암 등)', '화산쇄설암'],
+      answer: 0,
+      explanation: '기존의 화성암이나 퇴적암이 지하 깊은 곳에서 지각변동에 따른 고온·고압을 받아 새롭게 재결정된 암석이 변성암입니다.',
+    },
+  ],
+  '융합과학': [
+    {
+      category: '융합과학',
+      question: '화석 연료를 대체할 미래 청정 에너지원으로, 태양의 에너지 생성 원리와 동일한 반응은?',
+      options: ['핵융합 발전 (인공태양)', '원자력 분열 발전', '화력 발전', '석탄 가스화'],
+      answer: 0,
+      explanation: '가벼운 수소 원자핵들이 고온·고압에서 결합하여 헬륨이 되는 핵융합 반응은 방사성 폐기물이 적고 무한한 미래 청정에너지입니다.',
+    },
+    {
+      category: '융합과학',
+      question: '나노 기술(Nanotechnology)에서 1 나노미터(nm)는 몇 미터(m)일까요?',
+      options: ['10⁻⁹ m (10억분의 1미터)', '10⁻⁶ m (100만분의 1미터)', '10⁻³ m (1천분의 1미터)', '10⁻¹² m (1조분의 1미터)'],
+      answer: 0,
+      explanation: '1nm는 10의 -9제곱 미터로 머리카락 굵기의 약 10만 분의 1에 해당하는 극미세 세계입니다.',
+    },
+  ],
+};
+
+const CATEGORY_ICONS: Record<string, any> = {
+  '물리': Atom,
+  '화학': FlaskConical,
+  '생명과학': Dna,
+  '지구과학': Globe2,
+  '융합과학': Lightbulb,
 };
 
 interface QuizBattleProps {
@@ -126,7 +174,7 @@ interface QuizBattleProps {
 }
 
 export default function QuizBattle({ onScoreSubmitted }: QuizBattleProps) {
-  const [selectedCategory, setSelectedCategory] = useState<string>('수학');
+  const [selectedCategory, setSelectedCategory] = useState<string>('물리');
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [isAnswered, setIsAnswered] = useState<boolean>(false);
@@ -139,8 +187,9 @@ export default function QuizBattle({ onScoreSubmitted }: QuizBattleProps) {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
 
-  const questions = QUIZ_DATA[selectedCategory] || QUIZ_DATA['수학'];
+  const questions = SCIENCE_QUIZ_DATA[selectedCategory] || SCIENCE_QUIZ_DATA['물리'];
   const currentQ = questions[currentIndex];
+  const IconComponent = CATEGORY_ICONS[selectedCategory] || Atom;
 
   // Timer countdown
   useEffect(() => {
@@ -174,9 +223,9 @@ export default function QuizBattle({ onScoreSubmitted }: QuizBattleProps) {
       setCombo(newCombo);
       if (newCombo > maxCombo) setMaxCombo(newCombo);
       
-      const speedBonus = timeLeft * 10;
-      const comboBonus = newCombo * 50;
-      const points = 100 + speedBonus + comboBonus;
+      const speedBonus = timeLeft * 15;
+      const comboBonus = newCombo * 60;
+      const points = 120 + speedBonus + comboBonus;
       setScore((prev) => prev + points);
     } else {
       setCombo(0);
@@ -240,13 +289,13 @@ export default function QuizBattle({ onScoreSubmitted }: QuizBattleProps) {
       <div className="skeuo-panel p-6 flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="p-3 rounded-xl bg-cyan-500/10 border border-cyan-500/40 text-cyan-400">
-            <Award className="w-6 h-6" />
+            <IconComponent className="w-6 h-6 animate-pulse" />
           </div>
           <div>
-            <span className="text-xs font-mono uppercase tracking-widest text-slate-400">CURRENT BATTLE</span>
+            <span className="text-xs font-mono uppercase tracking-widest text-slate-400">SCIENCE BATTLE ARENA</span>
             <div className="flex items-center gap-2">
               <h2 className="text-xl font-black text-cyan-300 light:text-cyan-800">
-                {selectedCategory} 퀴즈 아레나
+                {selectedCategory} 사이언스 퀴즈 배틀
               </h2>
               <span className="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700 font-mono">
                 {currentIndex + 1} / {questions.length}
@@ -279,22 +328,26 @@ export default function QuizBattle({ onScoreSubmitted }: QuizBattleProps) {
       {/* Category Tabs */}
       {!isGameOver && (
         <div className="flex gap-2 overflow-x-auto pb-2">
-          {Object.keys(QUIZ_DATA).map((cat) => (
-            <button
-              key={cat}
-              onClick={() => {
-                setSelectedCategory(cat);
-                handleRestart();
-              }}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border ${
-                selectedCategory === cat
-                  ? 'bg-cyan-500 text-white border-cyan-300 shadow-neon-cyan scale-105'
-                  : 'bg-[#151928] text-slate-400 border-[#2a324b] hover:border-slate-500 hover:text-slate-200'
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
+          {Object.keys(SCIENCE_QUIZ_DATA).map((cat) => {
+            const CatIcon = CATEGORY_ICONS[cat] || Atom;
+            return (
+              <button
+                key={cat}
+                onClick={() => {
+                  setSelectedCategory(cat);
+                  handleRestart();
+                }}
+                className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all border flex items-center gap-2 ${
+                  selectedCategory === cat
+                    ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white border-cyan-300 shadow-neon-cyan scale-105'
+                    : 'bg-[#151928] text-slate-400 border-[#2a324b] hover:border-slate-500 hover:text-slate-200 light:bg-white light:text-slate-700'
+                }`}
+              >
+                <CatIcon className="w-3.5 h-3.5" />
+                <span>{cat}</span>
+              </button>
+            );
+          })}
         </div>
       )}
 
@@ -313,7 +366,7 @@ export default function QuizBattle({ onScoreSubmitted }: QuizBattleProps) {
 
           <div className="flex items-center justify-between mb-4">
             <span className="text-xs font-mono font-bold text-cyan-400 flex items-center gap-1.5">
-              <Sparkles className="w-4 h-4" /> QUESTION 0{currentIndex + 1}
+              <Sparkles className="w-4 h-4" /> SCIENCE QUESTION 0{currentIndex + 1}
             </span>
             <div className="flex items-center gap-1 text-xs font-mono text-slate-400">
               <Clock className="w-4 h-4 text-cyan-400" />
@@ -364,22 +417,22 @@ export default function QuizBattle({ onScoreSubmitted }: QuizBattleProps) {
             })}
           </div>
 
-          {/* Feedback & Explanation */}
+          {/* Feedback & Scientific Explanation */}
           {isAnswered && (
             <div className="p-4 rounded-xl bg-[#14192b] border border-[#2d3652] mb-6 animate-fadeIn">
               <div className="flex items-center gap-2 mb-1.5 font-bold text-sm">
                 {selectedOption === currentQ.answer ? (
                   <span className="text-emerald-400 flex items-center gap-1">
-                    <CheckCircle2 className="w-4 h-4" /> 정답입니다! (+콤보 보너스)
+                    <CheckCircle2 className="w-4 h-4" /> 정답입니다! (+보너스 콤보)
                   </span>
                 ) : (
                   <span className="text-rose-400 flex items-center gap-1">
-                    <XCircle className="w-4 h-4" /> 오답입니다! (콤보 리셋)
+                    <XCircle className="w-4 h-4" /> 아쉽네요! 오답입니다.
                   </span>
                 )}
               </div>
               <p className="text-xs text-slate-300 font-mono leading-relaxed light:text-slate-600">
-                💡 해설: {currentQ.explanation}
+                🔬 과학 원리 해설: {currentQ.explanation}
               </p>
             </div>
           )}
@@ -406,10 +459,10 @@ export default function QuizBattle({ onScoreSubmitted }: QuizBattleProps) {
 
           <div>
             <h3 className="text-2xl sm:text-3xl font-black text-white mb-2 light:text-slate-900">
-              배틀 클리어! 🎉
+              과학 배틀 완료! 🎉
             </h3>
             <p className="text-sm text-slate-400 font-mono">
-              모든 문제를 풀었습니다. 당신의 최종 배틀 성적표입니다.
+              모든 문제를 풀었습니다. 당신의 최종 과학 배틀 성적입니다.
             </p>
           </div>
 
@@ -432,11 +485,11 @@ export default function QuizBattle({ onScoreSubmitted }: QuizBattleProps) {
           {/* Leaderboard Submission Form */}
           {!hasSubmitted ? (
             <div className="max-w-md mx-auto p-6 rounded-2xl bg-[#161c30] border border-[#2e3756] shadow-inner space-y-4">
-              <h4 className="text-sm font-bold text-slate-200">🏆 명예의 전당 (랭킹)에 등록하기</h4>
+              <h4 className="text-sm font-bold text-slate-200">🏆 과학 명예의 전당에 점수 등록하기</h4>
               <div className="flex gap-2">
                 <input
                   type="text"
-                  placeholder="당신의 닉네임을 입력하세요 (예: 퀴즈마스터)"
+                  placeholder="닉네임을 입력하세요 (예: 아인슈타인)"
                   value={nickname}
                   onChange={(e) => setNickname(e.target.value)}
                   className="flex-1 px-4 py-2.5 rounded-xl bg-[#0e1220] border border-slate-700 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
@@ -455,7 +508,7 @@ export default function QuizBattle({ onScoreSubmitted }: QuizBattleProps) {
           ) : (
             <div className="p-4 max-w-md mx-auto rounded-xl bg-emerald-500/20 border border-emerald-500/50 text-emerald-300 text-sm font-semibold flex items-center justify-center gap-2">
               <CheckCircle2 className="w-5 h-5" />
-              <span>명예의 전당에 성공적으로 등록되었습니다!</span>
+              <span>과학 명예의 전당에 정상적으로 등록되었습니다!</span>
             </div>
           )}
 

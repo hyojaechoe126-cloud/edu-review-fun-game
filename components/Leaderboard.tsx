@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Trophy, Medal, RefreshCw, Zap, Shield, Crown } from 'lucide-react';
+import { Trophy, Medal, RefreshCw, Zap, Shield, Crown, Atom, FlaskConical, Dna, Globe2 } from 'lucide-react';
 import { Ranking, INITIAL_RANKINGS } from '@/lib/supabase';
 
 interface LeaderboardProps {
@@ -18,7 +18,7 @@ export default function Leaderboard({ refreshTrigger }: LeaderboardProps) {
     try {
       const res = await fetch('/api/rankings');
       const data = await res.json();
-      if (data && data.data) {
+      if (data && data.data && data.data.length > 0) {
         setRankings(data.data);
         setSource(data.source === 'supabase' ? 'Supabase DB (Seoul)' : 'Local Storage');
       }
@@ -43,9 +43,9 @@ export default function Leaderboard({ refreshTrigger }: LeaderboardProps) {
             <Trophy className="w-6 h-6" />
           </div>
           <div>
-            <span className="text-xs font-mono uppercase tracking-widest text-slate-400">HALL OF FAME</span>
+            <span className="text-xs font-mono uppercase tracking-widest text-slate-400">SCIENCE HALL OF FAME</span>
             <h2 className="text-xl font-black text-amber-300 light:text-amber-700">
-              실시간 명예의 전당 (리더보드)
+              과학 챔피언 명예의 전당 (실시간 랭킹)
             </h2>
           </div>
         </div>
@@ -88,7 +88,7 @@ export default function Leaderboard({ refreshTrigger }: LeaderboardProps) {
             <div className="w-12 h-12 mx-auto rounded-full bg-amber-500/20 border-2 border-amber-400 flex items-center justify-center text-amber-400 mb-2 font-black font-mono shadow-lg shadow-amber-500/20">
               <Crown className="w-6 h-6 fill-current animate-bounce" />
             </div>
-            <div className="text-xs font-mono font-bold text-amber-400">CHAMPION</div>
+            <div className="text-xs font-mono font-bold text-amber-400">GRAND CHAMPION</div>
             <div className="text-base sm:text-lg font-black text-white truncate my-1 light:text-slate-900">
               {rankings[0]?.nickname}
             </div>
@@ -121,8 +121,8 @@ export default function Leaderboard({ refreshTrigger }: LeaderboardProps) {
             <thead className="bg-[#121625] text-slate-400 font-mono text-xs uppercase border-b border-[#2a3045] light:bg-slate-100">
               <tr>
                 <th className="py-3.5 px-4 text-center w-16">순위</th>
-                <th className="py-3.5 px-4">플레이어 닉네임</th>
-                <th className="py-3.5 px-4 text-right">점수</th>
+                <th className="py-3.5 px-4">과학 연구원 닉네임</th>
+                <th className="py-3.5 px-4 text-right">과학 배틀 점수</th>
                 <th className="py-3.5 px-4 text-right hidden sm:table-cell">기록 일시</th>
               </tr>
             </thead>
@@ -147,7 +147,7 @@ export default function Leaderboard({ refreshTrigger }: LeaderboardProps) {
                     <span>{r.nickname}</span>
                     {idx < 3 && (
                       <span className="text-[10px] px-1.5 py-0.2 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-mono">
-                        TOP
+                        TOP SCIENTIST
                       </span>
                     )}
                   </td>

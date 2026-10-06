@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Zap, Moon, Sun, Server, Database, Volume2, VolumeX, ShieldCheck } from 'lucide-react';
+import { Zap, Moon, Sun, Atom, Sparkles } from 'lucide-react';
 
 interface NavbarProps {
   theme: 'dark' | 'light';
@@ -12,10 +12,8 @@ interface NavbarProps {
 
 export default function Navbar({ theme, setTheme, activeTab, setActiveTab }: NavbarProps) {
   const [latency, setLatency] = useState<number>(3);
-  const [isDbOnline, setIsDbOnline] = useState<boolean>(true);
 
   useEffect(() => {
-    // Check region API
     fetch('/api/region')
       .then((res) => res.json())
       .then((data) => {
@@ -32,22 +30,22 @@ export default function Navbar({ theme, setTheme, activeTab, setActiveTab }: Nav
         
         {/* Brand Logo & HUD Title */}
         <div className="flex items-center gap-3">
-          <div className="relative flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500/20 to-fuchsia-500/20 border border-cyan-400/50 shadow-neon-cyan">
-            <Zap className="w-7 h-7 text-cyan-400 animate-pulse" />
+          <div className="relative flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500/20 via-fuchsia-500/20 to-amber-500/20 border border-cyan-400/50 shadow-neon-cyan">
+            <Atom className="w-7 h-7 text-cyan-400 animate-spin" style={{ animationDuration: '12s' }} />
             <div className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-cyan-400 ring-4 ring-cyan-950 animate-ping" />
           </div>
           <div>
             <div className="flex items-center gap-2">
               <span className="text-xl sm:text-2xl font-black tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-pink-400 to-yellow-300">
-                EDU REVIEW
+                SCIENCE ARENA
               </span>
-              <span className="px-2 py-0.5 text-xs font-mono font-bold tracking-widest uppercase rounded bg-fuchsia-500/20 text-fuchsia-300 border border-fuchsia-500/40">
-                FUN GAME
+              <span className="px-2 py-0.5 text-xs font-mono font-bold tracking-widest uppercase rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
+                LAB V2.0
               </span>
             </div>
             <p className="text-xs text-slate-400 font-mono flex items-center gap-1.5 light:text-slate-500">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-              인터랙티브 퀴즈 배틀 & 리더보드 v1.0
+              과학 퀴즈 배틀 & 원소 미니게임 & 탐구 피드
             </p>
           </div>
         </div>
@@ -55,10 +53,10 @@ export default function Navbar({ theme, setTheme, activeTab, setActiveTab }: Nav
         {/* Navigation Tabs */}
         <nav className="hidden md:flex items-center gap-2 bg-[#151928] p-1.5 rounded-2xl border border-[#2a324b] shadow-inner light:bg-slate-100 light:border-slate-300">
           {[
-            { id: 'quiz', label: '⚡ 퀴즈 배틀' },
-            { id: 'game', label: '🎮 사이버 펄스 미니게임' },
-            { id: 'leaderboard', label: '🏆 명예의 전당 (랭킹)' },
-            { id: 'community', label: '💬 커뮤니티 & 질문 피드' },
+            { id: 'quiz', label: '⚛️ 과학 퀴즈 배틀' },
+            { id: 'game', label: '🧪 원소 스피드 랩' },
+            { id: 'leaderboard', label: '🏆 과학 명예의 전당' },
+            { id: 'community', label: '💬 과학 탐구 피드' },
           ].map((tab) => (
             <button
               key={tab.id}
@@ -87,7 +85,7 @@ export default function Navbar({ theme, setTheme, activeTab, setActiveTab }: Nav
             <span className="text-emerald-400 font-semibold">{latency}ms</span>
           </div>
 
-          {/* Theme Switcher (Skeuomorphic Toggle) */}
+          {/* Theme Switcher */}
           <button
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
             title="테마 전환 (사이버 네온 다크 / 메탈릭 라이트)"
@@ -106,8 +104,8 @@ export default function Navbar({ theme, setTheme, activeTab, setActiveTab }: Nav
       {/* Mobile Tabs */}
       <div className="flex md:hidden border-t border-[#252c42] bg-[#111422] p-2 gap-1 overflow-x-auto light:bg-slate-50 light:border-slate-200">
         {[
-          { id: 'quiz', label: '⚡ 퀴즈' },
-          { id: 'game', label: '🎮 미니게임' },
+          { id: 'quiz', label: '⚛️ 퀴즈' },
+          { id: 'game', label: '🧪 미니게임' },
           { id: 'leaderboard', label: '🏆 랭킹' },
           { id: 'community', label: '💬 피드' },
         ].map((tab) => (

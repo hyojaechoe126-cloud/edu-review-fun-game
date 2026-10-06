@@ -7,7 +7,7 @@ import QuizBattle from '@/components/QuizBattle';
 import MiniGame from '@/components/MiniGame';
 import Leaderboard from '@/components/Leaderboard';
 import CommunityFeed from '@/components/CommunityFeed';
-import { Zap, Gamepad2, Trophy, MessageSquare, Sparkles, Terminal } from 'lucide-react';
+import { Zap, FlaskConical, Trophy, MessageSquare, Sparkles, Terminal, Atom } from 'lucide-react';
 
 export default function Home() {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
@@ -51,17 +51,17 @@ export default function Home() {
         <div className="skeuo-panel p-6 sm:p-10 mb-8 relative overflow-hidden bg-gradient-to-br from-[#12162a]/90 via-[#181d36]/90 to-[#0e1122]/90 border-cyan-500/40 shadow-neon-cyan">
           <div className="relative z-10 max-w-2xl space-y-4">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-cyan-400 font-mono text-xs">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>미래형 인터랙티브 학습 아레나 SYSTEM V1.0</span>
+              <Atom className="w-3.5 h-3.5 animate-spin" style={{ animationDuration: '8s' }} />
+              <span>미래형 사이버 과학 탐구 아레나 SYSTEM V2.0</span>
             </div>
             
             <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-fuchsia-400 to-amber-300">
-              배우고, 대결하고,<br />랭킹의 정점에 도달하라!
+              과학을 정복하고,<br />명예의 전당 정상에 서라!
             </h1>
             
             <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-sans light:text-slate-600">
-              중·고등학교 핵심 과목(수학, 과학, 코딩, 역사) 퀴즈 배틀과 사이버 펄스 미니게임을 통해 즐겁게 실력을 점검하세요.
-              실시간 명예의 전당과 학생 커뮤니티 피드가 함께 제공됩니다.
+              물리, 화학, 생명과학, 지구과학 4대 과목의 인터랙티브 퀴즈 배틀과 원소기호 스피드 랩을 통해 실력을 점검하세요.
+              실시간 과학 명예의 전당과 학생들이 자유롭게 탐구하고 토론하는 커뮤니티 피드가 제공됩니다.
             </p>
 
             {/* Quick Action Buttons */}
@@ -75,7 +75,7 @@ export default function Home() {
                 }`}
               >
                 <Zap className="w-4 h-4 text-cyan-400" />
-                <span>퀴즈 배틀 시작</span>
+                <span>과학 퀴즈 배틀 시작</span>
               </button>
 
               <button
@@ -86,8 +86,8 @@ export default function Home() {
                     : 'bg-[#1b2138] text-slate-300 hover:text-white'
                 }`}
               >
-                <Gamepad2 className="w-4 h-4 text-fuchsia-400" />
-                <span>반응속도 미니게임</span>
+                <FlaskConical className="w-4 h-4 text-fuchsia-400" />
+                <span>원소 스피드 랩 (미니게임)</span>
               </button>
 
               <button
@@ -99,7 +99,7 @@ export default function Home() {
                 }`}
               >
                 <Trophy className="w-4 h-4 text-amber-400" />
-                <span>명예의 전당 (랭킹)</span>
+                <span>과학 명예의 전당</span>
               </button>
             </div>
           </div>
@@ -125,7 +125,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <Terminal className="w-4 h-4 text-cyan-400" />
-            <span>EDU REVIEW FUN GAME · Powered by Next.js & Supabase</span>
+            <span>SCIENCE ARENA · Powered by Next.js & Supabase</span>
           </div>
           <div>
             <span>Region: Seoul (icn1 / ap-northeast-2) · Latency Optimized &lt; 5ms</span>
