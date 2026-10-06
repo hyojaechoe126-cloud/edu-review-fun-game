@@ -1,14 +1,13 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { MessageSquare, Heart, Plus, Send, Clock, User, Sparkles, X, ChevronRight, Eye, MessageCircle, Share2, Atom, FlaskConical, Dna, Globe2 } from 'lucide-react';
+import { MessageSquare, Heart, Plus, Send, Clock, User, Sparkles, X, ChevronRight, Eye, MessageCircle } from 'lucide-react';
 import { Post, Comment, INITIAL_POSTS } from '@/lib/supabase';
 
-const CATEGORY_COLORS: Record<string, { bg: string; text: string; border: string }> = {
-  '물리': { bg: 'bg-cyan-500/20', text: 'text-cyan-300', border: 'border-cyan-500/40' },
-  '화학': { bg: 'bg-fuchsia-500/20', text: 'text-fuchsia-300', border: 'border-fuchsia-500/40' },
-  '생명과학': { bg: 'bg-emerald-500/20', text: 'text-emerald-300', border: 'border-emerald-500/40' },
-  '지구과학': { bg: 'bg-amber-500/20', text: 'text-amber-300', border: 'border-amber-500/40' },
+const GRADE_COLORS: Record<string, { bg: string; text: string; border: string }> = {
+  '과학1': { bg: 'bg-cyan-500/20', text: 'text-cyan-300', border: 'border-cyan-500/40' },
+  '과학2': { bg: 'bg-fuchsia-500/20', text: 'text-fuchsia-300', border: 'border-fuchsia-500/40' },
+  '과학3': { bg: 'bg-amber-500/20', text: 'text-amber-300', border: 'border-amber-500/40' },
 };
 
 export default function CommunityFeed() {
@@ -21,7 +20,7 @@ export default function CommunityFeed() {
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
   const [author, setAuthor] = useState<string>('');
-  const [category, setCategory] = useState<string>('물리');
+  const [category, setCategory] = useState<string>('과학1');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   // Comment State for Detail View
@@ -33,13 +32,12 @@ export default function CommunityFeed() {
       const res = await fetch('/api/posts');
       const data = await res.json();
       if (data && data.data && data.data.length > 0) {
-        // Merge with initial rich comments if needed
         const merged = data.data.map((p: Post) => {
           const init = INITIAL_POSTS.find((i) => i.id === p.id);
           return {
             ...p,
-            category: p.category || init?.category || '과학',
-            views: p.views || init?.views || Math.floor(Math.random() * 150) + 50,
+            category: p.category || init?.category || '과학1',
+            views: p.views || init?.views || Math.floor(Math.random() * 120) + 40,
             comments: p.comments || init?.comments || [],
           };
         });
@@ -55,7 +53,7 @@ export default function CommunityFeed() {
   }, []);
 
   const handleLike = async (e: React.MouseEvent, id: string | number) => {
-    e.stopPropagation(); // prevent modal opening when clicking like on card
+    e.stopPropagation();
 
     setPosts((prev) =>
       prev.map((p) => (p.id === id ? { ...p, likes: p.likes + 1 } : p))
@@ -147,42 +145,44 @@ export default function CommunityFeed() {
   return (
     <div className="w-full max-w-4xl mx-auto space-y-6">
       
-      {/* Header */}
-      <div className="skeuo-panel p-6 flex flex-wrap items-center justify-between gap-4">
+      {/* Header (Single-line Flex) */}
+      <div className="skeuo-panel p-5 sm:p-6 flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="p-3 rounded-xl bg-cyan-500/10 border border-cyan-500/40 text-cyan-400">
+          <div className="p-3 rounded-xl bg-cyan-500/10 border border-cyan-500/40 text-cyan-400 shrink-0">
             <MessageSquare className="w-6 h-6" />
           </div>
           <div>
-            <span className="text-xs font-mono uppercase tracking-widest text-slate-400">SCIENCE FORUM</span>
-            <h2 className="text-xl font-black text-cyan-300 light:text-cyan-800">
-              과학 탐구 질문 & 꿀팁 피드
+            <span className="text-[11px] font-mono uppercase tracking-widest text-slate-400 whitespace-nowrap">
+              COMMUNITY FORUM
+            </span>
+            <h2 className="text-lg sm:text-xl font-black text-cyan-300 light:text-cyan-800 whitespace-nowrap">
+              과학 탐구 피드
             </h2>
           </div>
         </div>
 
         <button
           onClick={() => setIsWriteModalOpen(true)}
-          className="skeuo-btn px-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold text-xs flex items-center gap-2 shadow-neon-cyan hover:scale-105"
+          className="skeuo-btn px-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold text-xs flex items-center gap-1.5 shadow-neon-cyan hover:scale-105 whitespace-nowrap"
         >
           <Plus className="w-4 h-4" />
-          <span>새 과학 질문 / 꿀팁 작성</span>
+          <span>새 글 작성</span>
         </button>
       </div>
 
-      {/* Category Filter Tabs */}
-      <div className="flex gap-2 overflow-x-auto pb-1">
-        {['전체', '물리', '화학', '생명과학', '지구과학'].map((cat) => (
+      {/* Category Filter Tabs: 과학1, 과학2, 과학3 (Single Line) */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-1">
+        {['전체', '과학1', '과학2', '과학3'].map((cat) => (
           <button
             key={cat}
             onClick={() => setFilterCategory(cat)}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all border ${
+            className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all border ${
               filterCategory === cat
                 ? 'bg-cyan-500 text-white border-cyan-400 shadow-neon-cyan'
                 : 'bg-[#151928] text-slate-400 border-[#283045] hover:text-white light:bg-white light:text-slate-600'
             }`}
           >
-            {cat}
+            {cat === '전체' ? '전체 보기' : cat}
           </button>
         ))}
       </div>
@@ -190,23 +190,23 @@ export default function CommunityFeed() {
       {/* Post List */}
       <div className="space-y-4">
         {filteredPosts.map((post) => {
-          const cat = post.category || '과학';
-          const catStyle = CATEGORY_COLORS[cat] || { bg: 'bg-cyan-500/20', text: 'text-cyan-300', border: 'border-cyan-500/40' };
+          const cat = post.category || '과학1';
+          const catStyle = GRADE_COLORS[cat] || { bg: 'bg-cyan-500/20', text: 'text-cyan-300', border: 'border-cyan-500/40' };
 
           return (
             <div
               key={post.id}
               onClick={() => setSelectedPost(post)}
-              className="skeuo-panel p-6 cursor-pointer hover:border-cyan-400/60 transition-all hover:shadow-[0_4px_25px_rgba(0,243,255,0.2)] hover:-translate-y-0.5 group"
+              className="skeuo-panel p-5 sm:p-6 cursor-pointer hover:border-cyan-400/60 transition-all hover:shadow-[0_4px_25px_rgba(0,243,255,0.2)] hover:-translate-y-0.5 group"
             >
-              <div className="flex items-start justify-between gap-4 mb-3">
+              <div className="flex items-start justify-between gap-4 mb-2.5">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <span className={`text-[11px] font-mono font-bold px-2 py-0.5 rounded-md border ${catStyle.bg} ${catStyle.text} ${catStyle.border}`}>
+                    <span className={`text-[11px] font-mono font-bold px-2 py-0.5 rounded-md border ${catStyle.bg} ${catStyle.text} ${catStyle.border} whitespace-nowrap`}>
                       {cat}
                     </span>
-                    <span className="text-xs text-slate-500 font-mono">
-                      조회 {post.views || 120}회
+                    <span className="text-xs text-slate-500 font-mono whitespace-nowrap">
+                      조회 {post.views || 100}회
                     </span>
                   </div>
                   <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-cyan-300 transition-colors light:text-slate-900 leading-snug">
@@ -214,26 +214,24 @@ export default function CommunityFeed() {
                   </h3>
                 </div>
 
-                <div className="flex items-center gap-2 shrink-0">
-                  <button
-                    onClick={(e) => handleLike(e, post.id)}
-                    className="skeuo-btn px-3 py-1.5 rounded-xl flex items-center gap-1.5 text-xs font-mono text-rose-400 hover:text-rose-300"
-                    title="좋아요 누르기"
-                  >
-                    <Heart className="w-4 h-4 fill-rose-500/30" />
-                    <span>{post.likes}</span>
-                  </button>
-                </div>
+                <button
+                  onClick={(e) => handleLike(e, post.id)}
+                  className="skeuo-btn px-3 py-1.5 rounded-xl flex items-center gap-1.5 text-xs font-mono text-rose-400 hover:text-rose-300 shrink-0"
+                  title="좋아요"
+                >
+                  <Heart className="w-4 h-4 fill-rose-500/30" />
+                  <span>{post.likes}</span>
+                </button>
               </div>
 
               {/* Snippet */}
-              <p className="text-sm text-slate-300 leading-relaxed mb-4 light:text-slate-700 line-clamp-2">
+              <p className="text-sm text-slate-300 leading-relaxed mb-3.5 light:text-slate-700 line-clamp-2">
                 {post.content}
               </p>
 
-              {/* Footer Info */}
+              {/* Footer Bar */}
               <div className="flex items-center justify-between text-xs text-slate-400 font-mono pt-3 border-t border-[#20273d] light:border-slate-200">
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3 whitespace-nowrap">
                   <div className="flex items-center gap-1.5">
                     <User className="w-3.5 h-3.5 text-cyan-400" />
                     <span className="font-bold text-slate-300 light:text-slate-700">{post.author}</span>
@@ -244,10 +242,10 @@ export default function CommunityFeed() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1.5 text-cyan-400 text-xs font-bold group-hover:translate-x-1 transition-transform">
+                <div className="flex items-center gap-1 text-cyan-400 text-xs font-bold group-hover:translate-x-1 transition-transform whitespace-nowrap">
                   <MessageCircle className="w-3.5 h-3.5" />
-                  <span>댓글 {post.comments?.length || 0}개</span>
-                  <ChevronRight className="w-3.5 h-3.5 ml-1" />
+                  <span>댓글 {post.comments?.length || 0}</span>
+                  <ChevronRight className="w-3.5 h-3.5" />
                 </div>
               </div>
             </div>
@@ -256,7 +254,7 @@ export default function CommunityFeed() {
       </div>
 
       {/* ======================================================== */}
-      {/* 🔍 POST DETAIL VIEW MODAL (자세히 보기 모달) */}
+      {/* 🔍 POST DETAIL VIEW MODAL (자세히 보기) */}
       {/* ======================================================== */}
       {selectedPost && (
         <div
@@ -271,11 +269,11 @@ export default function CommunityFeed() {
             <div className="flex items-start justify-between gap-4 border-b border-[#28324a] pb-4">
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-md bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
-                    {selectedPost.category || '과학 탐구'}
+                  <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-md bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 whitespace-nowrap">
+                    {selectedPost.category || '과학1'}
                   </span>
-                  <span className="text-xs text-slate-400 font-mono flex items-center gap-1">
-                    <Eye className="w-3.5 h-3.5" /> 조회 {selectedPost.views || 120}
+                  <span className="text-xs text-slate-400 font-mono flex items-center gap-1 whitespace-nowrap">
+                    <Eye className="w-3.5 h-3.5" /> 조회 {selectedPost.views || 100}
                   </span>
                 </div>
                 <h2 className="text-xl sm:text-2xl font-black text-white light:text-slate-900 leading-snug">
@@ -293,12 +291,12 @@ export default function CommunityFeed() {
             {/* Author & Meta Bar */}
             <div className="flex items-center justify-between text-xs font-mono text-slate-400 bg-[#0e1220] p-3 rounded-xl border border-slate-800">
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-full bg-cyan-500/20 border border-cyan-400 flex items-center justify-center text-cyan-300 font-bold">
+                <div className="w-7 h-7 rounded-full bg-cyan-500/20 border border-cyan-400 flex items-center justify-center text-cyan-300 font-bold shrink-0">
                   {selectedPost.author.slice(0, 1)}
                 </div>
                 <div>
                   <div className="font-bold text-slate-200">{selectedPost.author}</div>
-                  <div className="text-[10px] text-slate-500">과학 연구원 레벨</div>
+                  <div className="text-[10px] text-slate-500">중등 과학 탐구원</div>
                 </div>
               </div>
               <div className="flex items-center gap-3">
@@ -355,19 +353,19 @@ export default function CommunityFeed() {
                     placeholder="닉네임"
                     value={newCommentAuthor}
                     onChange={(e) => setNewCommentAuthor(e.target.value)}
-                    className="w-32 px-3 py-2 rounded-xl bg-[#0b0e1a] border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400"
+                    className="w-28 px-3 py-2 rounded-xl bg-[#0b0e1a] border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400"
                   />
                   <input
                     type="text"
                     required
-                    placeholder="과학 퀴즈 의견이나 피드백을 작성하세요"
+                    placeholder="의견이나 피드백을 작성하세요"
                     value={newCommentContent}
                     onChange={(e) => setNewCommentContent(e.target.value)}
                     className="flex-1 px-3 py-2 rounded-xl bg-[#0b0e1a] border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400"
                   />
                   <button
                     type="submit"
-                    className="skeuo-btn px-4 py-2 rounded-xl bg-cyan-500 text-white text-xs font-bold flex items-center gap-1 shadow-neon-cyan"
+                    className="skeuo-btn px-4 py-2 rounded-xl bg-cyan-500 text-white text-xs font-bold flex items-center gap-1 shadow-neon-cyan whitespace-nowrap"
                   >
                     <Send className="w-3.5 h-3.5" />
                     <span>등록</span>
@@ -395,7 +393,7 @@ export default function CommunityFeed() {
             <div className="flex items-center justify-between border-b border-[#2a3045] pb-3">
               <h3 className="text-lg font-bold text-cyan-300 flex items-center gap-2">
                 <Sparkles className="w-5 h-5 text-cyan-400" />
-                새 과학 질문 / 탐구 꿀팁 작성
+                새 질문 / 꿀팁 작성
               </h3>
               <button
                 onClick={() => setIsWriteModalOpen(false)}
@@ -408,17 +406,15 @@ export default function CommunityFeed() {
             <form onSubmit={handleCreatePost} className="space-y-4">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-mono text-slate-400 mb-1">분야 (과목)</label>
+                  <label className="block text-xs font-mono text-slate-400 mb-1">학년 과정</label>
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
                     className="w-full px-3 py-2 rounded-xl bg-[#0b0e1a] border border-slate-700 text-sm text-white focus:outline-none focus:border-cyan-400"
                   >
-                    <option value="물리">물리 (Physics)</option>
-                    <option value="화학">화학 (Chemistry)</option>
-                    <option value="생명과학">생명과학 (Biology)</option>
-                    <option value="지구과학">지구과학 (Earth Science)</option>
-                    <option value="융합과학">융합과학 (Integrated)</option>
+                    <option value="과학1">과학1 (중1 과정)</option>
+                    <option value="과학2">과학2 (중2 과정)</option>
+                    <option value="과학3">과학3 (중3 과정)</option>
                   </select>
                 </div>
 
@@ -427,7 +423,7 @@ export default function CommunityFeed() {
                   <input
                     type="text"
                     required
-                    placeholder="예: 닐스보어"
+                    placeholder="예: 중등과학짱"
                     value={author}
                     onChange={(e) => setAuthor(e.target.value)}
                     className="w-full px-3 py-2 rounded-xl bg-[#0b0e1a] border border-slate-700 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400"
@@ -436,11 +432,11 @@ export default function CommunityFeed() {
               </div>
 
               <div>
-                <label className="block text-xs font-mono text-slate-400 mb-1">질문 또는 팁 제목</label>
+                <label className="block text-xs font-mono text-slate-400 mb-1">제목</label>
                 <input
                   type="text"
                   required
-                  placeholder="예: 슈뢰딩거 고양이 사고실험 쉽게 설명해 주세요!"
+                  placeholder="예: 샤를 법칙 실험 질문입니다!"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   className="w-full px-4 py-2.5 rounded-xl bg-[#0b0e1a] border border-slate-700 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400"
@@ -452,7 +448,7 @@ export default function CommunityFeed() {
                 <textarea
                   required
                   rows={4}
-                  placeholder="공유하고 싶은 과학 지식이나 풀리지 않는 과학 퀴즈 질문을 자유롭게 적어주세요."
+                  placeholder="공유하고 싶은 과학 내용이나 질문을 적어주세요."
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                   className="w-full px-4 py-2.5 rounded-xl bg-[#0b0e1a] border border-slate-700 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 resize-none"
@@ -470,7 +466,7 @@ export default function CommunityFeed() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="skeuo-btn px-6 py-2.5 rounded-xl bg-cyan-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-neon-cyan disabled:opacity-50"
+                  className="skeuo-btn px-6 py-2.5 rounded-xl bg-cyan-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-neon-cyan disabled:opacity-50 whitespace-nowrap"
                 >
                   <Send className="w-4 h-4" />
                   <span>{isSubmitting ? '등록 중...' : '등록하기'}</span>

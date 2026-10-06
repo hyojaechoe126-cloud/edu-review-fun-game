@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Trophy, Medal, RefreshCw, Zap, Shield, Crown, Atom, FlaskConical, Dna, Globe2 } from 'lucide-react';
+import { Trophy, RefreshCw, Crown } from 'lucide-react';
 import { Ranking, INITIAL_RANKINGS } from '@/lib/supabase';
 
 interface LeaderboardProps {
@@ -20,7 +20,7 @@ export default function Leaderboard({ refreshTrigger }: LeaderboardProps) {
       const data = await res.json();
       if (data && data.data && data.data.length > 0) {
         setRankings(data.data);
-        setSource(data.source === 'supabase' ? 'Supabase DB (Seoul)' : 'Local Storage');
+        setSource(data.source === 'supabase' ? 'Supabase DB' : '로컬 스토리지');
       }
     } catch (e) {
       console.error(e);
@@ -36,28 +36,30 @@ export default function Leaderboard({ refreshTrigger }: LeaderboardProps) {
   return (
     <div className="w-full max-w-4xl mx-auto space-y-6">
       
-      {/* Header */}
-      <div className="skeuo-panel p-6 flex flex-wrap items-center justify-between gap-4">
+      {/* Header (Single Line Flex) */}
+      <div className="skeuo-panel p-5 sm:p-6 flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/40 text-amber-400">
+          <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/40 text-amber-400 shrink-0">
             <Trophy className="w-6 h-6" />
           </div>
           <div>
-            <span className="text-xs font-mono uppercase tracking-widest text-slate-400">SCIENCE HALL OF FAME</span>
-            <h2 className="text-xl font-black text-amber-300 light:text-amber-700">
-              과학 챔피언 명예의 전당 (실시간 랭킹)
+            <span className="text-[11px] font-mono uppercase tracking-widest text-slate-400 whitespace-nowrap">
+              HALL OF FAME
+            </span>
+            <h2 className="text-lg sm:text-xl font-black text-amber-300 light:text-amber-700 whitespace-nowrap">
+              명예의 전당 (실시간 랭킹)
             </h2>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <span className="text-xs font-mono px-2.5 py-1 rounded-lg bg-[#141828] border border-slate-700 text-slate-400">
-            데이터 소스: <strong className="text-cyan-400">{source}</strong>
+        <div className="flex items-center gap-2.5 shrink-0">
+          <span className="text-xs font-mono px-2.5 py-1 rounded-lg bg-[#141828] border border-slate-700 text-slate-400 whitespace-nowrap">
+            소스: <strong className="text-cyan-400">{source}</strong>
           </span>
           <button
             onClick={fetchRankings}
             disabled={isLoading}
-            className="skeuo-btn p-2 rounded-xl text-slate-300 hover:text-cyan-300 transition-transform active:rotate-180"
+            className="skeuo-btn p-2 rounded-xl text-slate-300 hover:text-cyan-300 transition-transform active:rotate-180 shrink-0"
             title="새로고침"
           >
             <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
@@ -67,47 +69,47 @@ export default function Leaderboard({ refreshTrigger }: LeaderboardProps) {
 
       {/* Top 3 Podium */}
       {rankings.length >= 3 && (
-        <div className="grid grid-cols-3 gap-3 sm:gap-4 items-end pt-6">
+        <div className="grid grid-cols-3 gap-3 sm:gap-4 items-end pt-4 sm:pt-6">
           
           {/* 2nd Place */}
-          <div className="skeuo-panel p-4 text-center order-1 sm:order-1 border-slate-400/40 bg-gradient-to-t from-slate-900/60 to-slate-800/20">
-            <div className="w-10 h-10 mx-auto rounded-full bg-slate-400/20 border border-slate-300 flex items-center justify-center text-slate-300 mb-2 font-black font-mono">
+          <div className="skeuo-panel p-3.5 sm:p-4 text-center order-1 sm:order-1 border-slate-400/40 bg-gradient-to-t from-slate-900/60 to-slate-800/20">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 mx-auto rounded-full bg-slate-400/20 border border-slate-300 flex items-center justify-center text-slate-300 mb-2 font-black font-mono">
               2
             </div>
-            <div className="text-xs font-mono text-slate-400">SILVER</div>
-            <div className="text-sm sm:text-base font-bold text-white truncate my-1 light:text-slate-900">
+            <div className="text-[11px] font-mono text-slate-400 whitespace-nowrap">SILVER</div>
+            <div className="text-xs sm:text-base font-bold text-white truncate my-1 light:text-slate-900">
               {rankings[1]?.nickname}
             </div>
-            <div className="text-base sm:text-lg font-black text-slate-300 font-mono">
-              {rankings[1]?.score.toLocaleString()} <span className="text-xs">P</span>
+            <div className="text-sm sm:text-lg font-black text-slate-300 font-mono whitespace-nowrap">
+              {rankings[1]?.score.toLocaleString()} P
             </div>
           </div>
 
           {/* 1st Place */}
-          <div className="skeuo-panel p-5 text-center order-2 sm:order-2 border-amber-400/60 bg-gradient-to-t from-amber-950/40 to-yellow-900/20 transform -translate-y-2 shadow-[0_0_30px_rgba(251,191,36,0.2)]">
-            <div className="w-12 h-12 mx-auto rounded-full bg-amber-500/20 border-2 border-amber-400 flex items-center justify-center text-amber-400 mb-2 font-black font-mono shadow-lg shadow-amber-500/20">
-              <Crown className="w-6 h-6 fill-current animate-bounce" />
+          <div className="skeuo-panel p-4 sm:p-5 text-center order-2 sm:order-2 border-amber-400/60 bg-gradient-to-t from-amber-950/40 to-yellow-900/20 transform -translate-y-2 shadow-[0_0_30px_rgba(251,191,36,0.2)]">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto rounded-full bg-amber-500/20 border-2 border-amber-400 flex items-center justify-center text-amber-400 mb-2 font-black font-mono shadow-lg shadow-amber-500/20">
+              <Crown className="w-5 h-5 sm:w-6 sm:h-6 fill-current animate-bounce" />
             </div>
-            <div className="text-xs font-mono font-bold text-amber-400">GRAND CHAMPION</div>
-            <div className="text-base sm:text-lg font-black text-white truncate my-1 light:text-slate-900">
+            <div className="text-[11px] font-mono font-bold text-amber-400 whitespace-nowrap">CHAMPION</div>
+            <div className="text-sm sm:text-lg font-black text-white truncate my-1 light:text-slate-900">
               {rankings[0]?.nickname}
             </div>
-            <div className="text-xl sm:text-2xl font-black text-amber-300 font-mono">
-              {rankings[0]?.score.toLocaleString()} <span className="text-xs">P</span>
+            <div className="text-base sm:text-2xl font-black text-amber-300 font-mono whitespace-nowrap">
+              {rankings[0]?.score.toLocaleString()} P
             </div>
           </div>
 
           {/* 3rd Place */}
-          <div className="skeuo-panel p-4 text-center order-3 sm:order-3 border-amber-700/40 bg-gradient-to-t from-amber-950/30 to-amber-900/10">
-            <div className="w-10 h-10 mx-auto rounded-full bg-amber-700/20 border border-amber-600 flex items-center justify-center text-amber-600 mb-2 font-black font-mono">
+          <div className="skeuo-panel p-3.5 sm:p-4 text-center order-3 sm:order-3 border-amber-700/40 bg-gradient-to-t from-amber-950/30 to-amber-900/10">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 mx-auto rounded-full bg-amber-700/20 border border-amber-600 flex items-center justify-center text-amber-600 mb-2 font-black font-mono">
               3
             </div>
-            <div className="text-xs font-mono text-amber-600">BRONZE</div>
-            <div className="text-sm sm:text-base font-bold text-white truncate my-1 light:text-slate-900">
+            <div className="text-[11px] font-mono text-amber-600 whitespace-nowrap">BRONZE</div>
+            <div className="text-xs sm:text-base font-bold text-white truncate my-1 light:text-slate-900">
               {rankings[2]?.nickname}
             </div>
-            <div className="text-base sm:text-lg font-black text-amber-500 font-mono">
-              {rankings[2]?.score.toLocaleString()} <span className="text-xs">P</span>
+            <div className="text-sm sm:text-lg font-black text-amber-500 font-mono whitespace-nowrap">
+              {rankings[2]?.score.toLocaleString()} P
             </div>
           </div>
 
@@ -120,10 +122,10 @@ export default function Leaderboard({ refreshTrigger }: LeaderboardProps) {
           <table className="w-full text-left text-sm">
             <thead className="bg-[#121625] text-slate-400 font-mono text-xs uppercase border-b border-[#2a3045] light:bg-slate-100">
               <tr>
-                <th className="py-3.5 px-4 text-center w-16">순위</th>
-                <th className="py-3.5 px-4">과학 연구원 닉네임</th>
-                <th className="py-3.5 px-4 text-right">과학 배틀 점수</th>
-                <th className="py-3.5 px-4 text-right hidden sm:table-cell">기록 일시</th>
+                <th className="py-3 px-4 text-center w-16 whitespace-nowrap">순위</th>
+                <th className="py-3 px-4 whitespace-nowrap">학생 닉네임</th>
+                <th className="py-3 px-4 text-right whitespace-nowrap">점수</th>
+                <th className="py-3 px-4 text-right hidden sm:table-cell whitespace-nowrap">기록 일시</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#1e2338] font-mono light:divide-slate-200">
@@ -140,21 +142,21 @@ export default function Leaderboard({ refreshTrigger }: LeaderboardProps) {
                       : 'text-slate-300 light:text-slate-700'
                   }`}
                 >
-                  <td className="py-3.5 px-4 text-center font-bold">
+                  <td className="py-3 px-4 text-center font-bold whitespace-nowrap">
                     {idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `#${idx + 1}`}
                   </td>
-                  <td className="py-3.5 px-4 font-bold font-sans flex items-center gap-2">
+                  <td className="py-3 px-4 font-bold font-sans flex items-center gap-2 whitespace-nowrap">
                     <span>{r.nickname}</span>
                     {idx < 3 && (
                       <span className="text-[10px] px-1.5 py-0.2 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-mono">
-                        TOP SCIENTIST
+                        TOP
                       </span>
                     )}
                   </td>
-                  <td className="py-3.5 px-4 text-right font-black text-cyan-300 light:text-cyan-700">
+                  <td className="py-3 px-4 text-right font-black text-cyan-300 light:text-cyan-700 whitespace-nowrap">
                     {r.score.toLocaleString()} P
                   </td>
-                  <td className="py-3.5 px-4 text-right text-xs text-slate-500 hidden sm:table-cell">
+                  <td className="py-3 px-4 text-right text-xs text-slate-500 hidden sm:table-cell whitespace-nowrap">
                     {r.played_at}
                   </td>
                 </tr>
