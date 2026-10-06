@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Zap, Moon, Sun, Atom, Trophy, Gamepad2, MessageSquare } from 'lucide-react';
+import { Zap, Moon, Sun, Atom, Trophy, Gamepad2, MessageSquare, Bot } from 'lucide-react';
 
 interface NavbarProps {
   theme: 'dark' | 'light';
@@ -27,6 +27,7 @@ export default function Navbar({ theme, setTheme, activeTab, setActiveTab }: Nav
   const navItems = [
     { id: 'quiz', label: '과학 퀴즈 배틀', icon: Zap },
     { id: 'game', label: '미니게임', icon: Gamepad2 },
+    { id: 'ai-tutor', label: 'AI 과학 튜터', icon: Bot },
     { id: 'leaderboard', label: '명예의 전당', icon: Trophy },
     { id: 'community', label: '탐구 피드', icon: MessageSquare },
   ];

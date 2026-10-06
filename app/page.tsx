@@ -7,7 +7,8 @@ import QuizBattle from '@/components/QuizBattle';
 import MiniGame from '@/components/MiniGame';
 import Leaderboard from '@/components/Leaderboard';
 import CommunityFeed from '@/components/CommunityFeed';
-import { Zap, Gamepad2, Trophy, MessageSquare, Terminal, Atom } from 'lucide-react';
+import ScienceChatbot from '@/components/ScienceChatbot';
+import { Zap, Gamepad2, Trophy, MessageSquare, Terminal, Atom, Bot } from 'lucide-react';
 
 export default function Home() {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
@@ -91,6 +92,18 @@ export default function Home() {
               </button>
 
               <button
+                onClick={() => setActiveTab('ai-tutor')}
+                className={`skeuo-btn px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-1.5 whitespace-nowrap shrink-0 ${
+                  activeTab === 'ai-tutor'
+                    ? 'bg-gradient-to-r from-cyan-400 to-indigo-600 text-white shadow-neon-cyan'
+                    : 'bg-[#1b2138] text-slate-300 hover:text-white'
+                }`}
+              >
+                <Bot className="w-4 h-4 text-cyan-400" />
+                <span>AI 과학 튜터</span>
+              </button>
+
+              <button
                 onClick={() => setActiveTab('leaderboard')}
                 className={`skeuo-btn px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-1.5 whitespace-nowrap shrink-0 ${
                   activeTab === 'leaderboard'
@@ -126,11 +139,28 @@ export default function Home() {
         <div className="transition-all duration-300">
           {activeTab === 'quiz' && <QuizBattle onScoreSubmitted={handleScoreSubmitted} />}
           {activeTab === 'game' && <MiniGame onScoreSubmitted={handleScoreSubmitted} />}
+          {activeTab === 'ai-tutor' && <ScienceChatbot />}
           {activeTab === 'leaderboard' && <Leaderboard refreshTrigger={refreshTrigger} />}
           {activeTab === 'community' && <CommunityFeed />}
         </div>
 
       </main>
+
+      {/* Floating HUD AI Science Tutor Launcher */}
+      <button
+        onClick={() => {
+          setActiveTab('ai-tutor');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
+        title="AI 과학 튜터에게 질문하기"
+        className="fixed bottom-6 right-6 z-40 skeuo-btn px-4 py-3 rounded-2xl bg-gradient-to-r from-cyan-500 via-sky-500 to-indigo-600 text-white font-bold text-xs sm:text-sm flex items-center gap-2 shadow-neon-cyan hover:scale-105 active:scale-95 transition-all group"
+      >
+        <div className="relative">
+          <Bot className="w-5 h-5 text-white animate-bounce" />
+          <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-cyan-950 animate-ping" />
+        </div>
+        <span className="whitespace-nowrap font-black tracking-wide">AI 과학 질문</span>
+      </button>
 
       {/* Cyberpunk Footer */}
       <footer className="border-t border-[#1e2438] bg-[#07080e] py-6 text-xs font-mono text-slate-500 transition-colors light:bg-slate-200 light:border-slate-300 light:text-slate-600">
