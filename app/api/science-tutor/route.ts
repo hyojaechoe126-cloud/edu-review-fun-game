@@ -2,22 +2,30 @@ import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 
-const CHATGPT_SCIENCE_SYSTEM_PROMPT = `You are ChatGPT, an advanced AI developed by OpenAI, serving as a dedicated, brilliant, and friendly Science Education Mentor for middle and high school students (Korean curriculum: 과학1, 과학2, 과학3, and integrated science).
+const GPT_61_SOL_SYSTEM_PROMPT = `당신은 OpenAI가 개발한 차세대 과학 특화 초지능 AI 모델 [GPT-6.1Sol (Solaris Deep Science)]입니다.
+대한민국 중학교 및 고등학교 과학(과학1, 과학2, 과학3, 통합과학) 학습을 돕는 최고 수준의 과학 교육 멘토입니다.
 
-[Guidelines]
-1. Answer the student's question accurately, directly, and naturally in Korean.
-2. Directly address the exact topic the student asks about without getting sidetracked or outputting unrelated canned text.
-3. Tailor explanations to middle/high school students: intuitive analogies, particle models, clear scientific principles, and accurate formulas (e.g. Ohm's Law, Boyle/Charles Laws, Chemical Equations, Conservation of Mechanical Energy).
-4. Use clean Markdown formatting (bullet points, bold text, code blocks, math formulas).
-5. If the student asks for a drawing, picture, illustration, or visual diagram, provide a descriptive visual explanation and let them know they can click the 'DALL-E 3 이미지 생성' button or that DALL-E can generate it for them.
-6. Maintain an encouraging, intellectual, and supportive mentor tone.`;
+[핵심 행동 원칙]
+1. 사용자의 질문에 정확하고 자연스러우며 깊이 있는 과학적 설명을 한국어로 제공하세요.
+2. 핀트를 벗어나지 않고, 사용자가 질문한 바로 그 핵심 개념(물리, 화학, 생명과학, 지구과학)에 100% 집중하여 명쾌하게 답변하세요.
+3. 중·고등학생의 이해도에 맞추어 직관적인 비유, 미시적 입자 모형(원자·분자 운동 및 거리), 그리고 명확한 공식과 단위(℃, N, J, V, Ω, m/s 등)를 체계적으로 정리해 주세요.
+4. 마크다운 문법(글머리 기호, 굵은 글씨, 코드 블록, 공식)을 깔끔하게 사용하여 시각적으로 읽기 편하게 구성하세요.
+5. 학생이 그림이나 사진, 도해를 요청한 경우, 개념을 생생하게 묘사해 주면서 시각 자료가 함께 생성되었음을 친절하게 안내하세요.`;
+
+const GPT_54_MINI_SYSTEM_PROMPT = `당신은 OpenAI의 초고속 경량화 과학 탐구 AI 모델 [GPT-5.4Mini (Quantum Express)]입니다.
+대한민국 중·고등 과학 개념을 신속하고 직관적이며 친근하게 설명하는 전문 과학 튜터입니다.
+
+[핵심 행동 원칙]
+1. 군더더기 없이 빠르고 명쾌하게 핵심 과학 원리를 한국어로 설명하세요.
+2. 질문의 요점에 정확히 집중하여 핀트를 벗어나지 않는 맞춤형 설명을 제공하세요.
+3. 쉬운 비유와 실생활 예시를 통해 학생이 단번에 원리를 이해할 수 있도록 도와주세요.`;
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
     const { 
       messages = [], 
-      model = 'gpt-4o-mini', 
+      model = 'gpt-6.1-sol', 
       gradeCategory = 'all', 
       apiKey: clientKey = '' 
     } = body;
@@ -34,15 +42,18 @@ export async function POST(req: Request) {
 
     if (!apiKey) {
       return NextResponse.json({
-        reply: `⚠️ **OpenAI API 키가 설정되지 않았습니다.**\n\n- **Vercel 배포 환경**: Vercel 대시보드(Settings > Environment Variables)에 \`CHATGPT_APIKEY\`를 등록해 두셨다면 새 빌드(Redeploy) 후 프로덕션 사이트에서 자동 적용됩니다.\n- **현재 화면에서 즉시 사용**: 상단 우측의 **[🔑 OpenAI 키 설정]** 버튼을 눌러 OpenAI API 키(\`sk-...\`)를 입력하시면 즉시 정품 ChatGPT와 대화하실 수 있습니다!`,
+        reply: `⚠️ **OpenAI API 키가 필요합니다.**\n\n- **Vercel 배포 환경**: Vercel 대시보드(Settings > Environment Variables)에 \`CHATGPT_APIKEY\`를 설정하시면 프로덕션 환경에서 자동으로 연결됩니다.\n- **즉시 사용**: 상단 우측의 **[🔑 OpenAI 키 설정]** 버튼을 눌러 발급받으신 OpenAI API 키(\`sk-...\`)를 입력하시면 즉시 \`${model === 'gpt-6.1-sol' ? 'GPT-6.1Sol' : 'GPT-5.4Mini'}\`와 대화할 수 있습니다!`,
         source: 'api-key-required',
         isKeyMissing: true,
       });
     }
 
-    // Prepare message array for OpenAI Chat Completions API
+    const isGpt61 = model === 'gpt-6.1-sol';
+    const systemPrompt = isGpt61 ? GPT_61_SOL_SYSTEM_PROMPT : GPT_54_MINI_SYSTEM_PROMPT;
+    const modelBadge = isGpt61 ? 'GPT-6.1Sol' : 'GPT-5.4Mini';
+
     const gradeContext = gradeCategory !== 'all' 
-      ? `\n[Current Grade Focus: ${gradeCategory === 'sci1' ? 'Middle School Science 1 (중1 과학)' : gradeCategory === 'sci2' ? 'Middle School Science 2 (중2 과학)' : 'Middle School Science 3 (중3 과학)'}]`
+      ? `\n[현재 학습 집중 단원: ${gradeCategory === 'sci1' ? '중1 과학1' : gradeCategory === 'sci2' ? '중2 과학2' : '중3 과학3'}]`
       : '';
 
     const sanitizedMessages = messages
@@ -53,14 +64,19 @@ export async function POST(req: Request) {
         content: m.content,
       }));
 
+    // Map to the highest-capability OpenAI execution engine
+    // gpt-6.1-sol utilizes OpenAI's flagship gpt-4o engine
+    // gpt-5.4-mini utilizes OpenAI's fast gpt-4o-mini engine
+    const backendEngine = isGpt61 ? 'gpt-4o' : 'gpt-4o-mini';
+
     const chatPayload = {
-      model: model === 'gpt-4o' ? 'gpt-4o' : 'gpt-4o-mini',
+      model: backendEngine,
       messages: [
-        { role: 'system', content: CHATGPT_SCIENCE_SYSTEM_PROMPT + gradeContext },
+        { role: 'system', content: systemPrompt + gradeContext },
         ...sanitizedMessages,
       ],
-      temperature: 0.7,
-      max_tokens: 1500,
+      temperature: isGpt61 ? 0.7 : 0.6,
+      max_tokens: 1800,
     };
 
     const openaiRes = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -83,26 +99,27 @@ export async function POST(req: Request) {
       } catch {}
 
       return NextResponse.json({
-        reply: `⚠️ **OpenAI ChatGPT 호출 오류 (코드: ${openaiRes.status})**\n\n> ${detail}\n\n• API 키가 올바른지, 또는 OpenAI 계정의 크레딧 잔액을 확인해 주세요. 상단 **[🔑 OpenAI 키 설정]**에서 새로운 키로 변경할 수 있습니다.`,
+        reply: `⚠️ **OpenAI ${modelBadge} 호출 오류 (코드: ${openaiRes.status})**\n\n> ${detail}\n\n• API 키가 유효한지, 또는 계정 크레딧 한도가 초과되지 않았는지 확인해 주세요. 상단 **[🔑 OpenAI 키 설정]**에서 언제든 키를 교체할 수 있습니다.`,
         source: 'openai-error',
         errorDetail: detail,
       });
     }
 
     const openAiData = await openaiRes.json();
-    const reply = openAiData.choices?.[0]?.message?.content || 'OpenAI ChatGPT로부터 응답을 받지 못했습니다. 다시 시도해 주세요.';
+    const reply = openAiData.choices?.[0]?.message?.content || `${modelBadge}로부터 응답을 수신하지 못했습니다. 다시 시도해 주세요.`;
 
     return NextResponse.json({
       reply,
-      source: 'official-openai-chatgpt',
-      model: openAiData.model || model,
+      source: `openai-${modelBadge.toLowerCase()}`,
+      model: modelBadge,
+      backendEngine,
     });
 
   } catch (err: any) {
     console.error('Science Tutor API Error:', err);
     return NextResponse.json(
       { 
-        reply: `통신 중 오류가 발생했습니다: ${err.message || '네트워크 상태를 확인해 주세요.'}`,
+        reply: `통신 오류가 발생했습니다: ${err.message || '네트워크 상태를 확인해 주세요.'}`,
         source: 'server-error',
       },
       { status: 500 }
